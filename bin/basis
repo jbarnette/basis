@@ -1,0 +1,59 @@
+#!/usr/bin/env ruby
+
+require "basis"
+require "optparse"
+
+@defines = {}
+
+@options = OptionParser.new
+
+@options.banner = <<-END
+  Usage: basis [options] COMMAND [ARGS]
+
+  Commands:
+      add <git-url> [name]             Register a template locally
+      list, ls [pattern]               List available templates
+      remove, rm <name>                Remove a template
+      update [pattern]                 Update local templates
+
+      # add the 'gem:hoe' template
+      $ basis add git://github.com/jbarnette/basis-gem-hoe.git
+
+      # start a new project `foo' using the `gem:hoe' template
+      $ basis gem:hoe foo
+
+  Switches:
+END
+
+@options.banner.gsub! /^  /, ""
+
+def help
+  puts @options.help
+  exit
+end
+
+def help! message = nil
+  warn "fatal: #{message}" if message
+  abort @options.help
+end
+
+@options.on "-D KEY=VAL", "Define or override a config value" do |kv|
+  /^([^=]+)(=(.*))?$/ =~ kv
+  key, value = $1, $3 || true
+  @defines[key] = value
+end
+
+@options.on "--help", "-h", "-?", "Show this help" do
+  help
+end
+
+@options.on "--version", "-V", "Print #{Basis::VERSION}" do
+  puts Basis::Version
+  exit
+end
+
+begin
+  @options.parse! ARGV
+rescue OptionParser::ParseError => e
+  help! e.message
+end
