@@ -9,4 +9,6 @@ Hoe.spec "basis" do
   self.history_file     = "CHANGELOG.rdoc"
   self.readme_file      = "README.rdoc"
   self.testlib          = :minitest
+
+  extra_deps << ["erubis", ">= 2", "< 3"]
 end

@@ -4,7 +4,9 @@
 
 == Description
 
-FIX (describe your package)
+Basis is a project skeleton generator.
+
+It'll have more docs at some point.
 
 == Examples
 
@@ -13,6 +15,7 @@ FIX (describe your package)
 == Installation
 
     $ gem install basis
+    $ basis --help
 
 == License
 

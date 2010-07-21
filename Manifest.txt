@@ -7,6 +7,8 @@ bin/basis
 lib/basis.rb
 lib/basis/context.rb
 lib/basis/my.rb
+lib/basis/repo.rb
 lib/basis/template.rb
 test/test_basis_context.rb
 test/test_basis_my.rb
+test/test_basis_template.rb
