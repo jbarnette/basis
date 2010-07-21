@@ -3,12 +3,10 @@ require "fileutils"
 
 module Basis
   class Template
-    attr_reader :name
     attr_reader :srcdir
 
     def initialize srcdir
       @srcdir = File.expand_path srcdir
-      @name   = File.basename @srcdir
     end
 
     def render destdir, context
@@ -26,10 +24,7 @@ module Basis
 
         FileUtils.mkdir_p File.dirname(target)
 
-        if File.exist? target
-          # FIX: prompt for override, etc?
-          warn "overwriting #{target}"
-        end
+        # FIX: prompt for overwrite?
 
         contents = File.read src
 

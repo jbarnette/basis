@@ -1,10 +1,13 @@
 #!/usr/bin/env ruby
 
+require "rubygems"
 require "basis"
+require "basis/context"
+require "basis/my"
+require "basis/repo"
 require "optparse"
 
 @defines = {}
-
 @options = OptionParser.new
 
 @options.banner = <<-END
@@ -56,4 +59,36 @@ begin
   @options.parse! ARGV
 rescue OptionParser::ParseError => e
   help! e.message
+end
+
+@repo = Basis::Repo.new
+
+# FIX: rescue
+
+case command = ARGV.shift
+when "add" then
+  url, name = ARGV
+  help! "Need a url" unless url
+  @repo.add url, name
+
+when "ls", "list" then
+  @repo.templates(ARGV.shift).each { |name, template| puts name }
+
+when "rm", "remove" then
+  help! "Need a name" unless name = ARGV.shift
+  @repo.remove name
+
+when "update" then
+  @repo.update ARGV.shift
+
+else
+  template = @repo.templates[command]
+
+  help! "Unknown command or template: #{command}" unless template
+  help! "Need a destination directory" unless destdir = ARGV.shift
+
+  my  = Basis::My.new File.basename(destdir)
+  ctx = Basis::Context.new my, @overrides
+
+  template.render destdir, ctx
 end
