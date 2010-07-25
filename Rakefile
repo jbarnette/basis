@@ -5,6 +5,8 @@ Hoe.plugin :doofus, :git
 Hoe.spec "basis" do
   developer "John Barnette", "jbarnette@gmail.com"
 
+  require_ruby_version ">= 1.8.7"
+  
   self.extra_rdoc_files = Dir["*.rdoc"]
   self.history_file     = "CHANGELOG.rdoc"
   self.readme_file      = "README.rdoc"
