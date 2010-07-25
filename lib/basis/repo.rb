@@ -1,5 +1,6 @@
 require "basis/template"
 require "fileutils"
+require "open3"
 
 module Basis
   class Repo
@@ -56,8 +57,13 @@ module Basis
 
     private
 
-    def git *args # FIX
-      system "git", *args.map(&:to_s)
+    def git *args
+      error = Open3.popen3 "git", *args.map(&:to_s) do |stdin, stdout, stderr|
+        err = stderr.read.chomp
+        err unless err.empty?
+      end
+
+      raise error if error
     end
 
     def template_path *args
