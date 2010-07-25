@@ -28,6 +28,10 @@ module Basis
       @templates = nil
     end
 
+    def rename old, new
+      FileUtils.mv template_path(old), template_path(new)
+    end
+
     def templates pattern = nil
       unless @templates
         @templates = {}

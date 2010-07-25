@@ -17,6 +17,7 @@ require "optparse"
       add <git-url> [name]             Register a template locally
       list, ls [pattern]               List available templates
       remove, rm <name>                Remove a template
+      rename, mv <old> <new>           Rename a template
       update [pattern]                 Update local templates
 
       # add the 'gem:hoe' template
@@ -74,6 +75,10 @@ when "add" then
 when "ls", "list" then
   @repo.templates(ARGV.shift).each { |name, template| puts name }
 
+when "mv", "rename" then
+  help! "Need names!" unless (old, new = ARGV) && old && new
+  @repo.rename old, new
+
 when "rm", "remove" then
   help! "Need a name" unless name = ARGV.shift
   @repo.remove name
@@ -82,6 +87,7 @@ when "update" then
   @repo.update ARGV.shift
 
 else
+  help! unless command
   template = @repo.templates[command]
 
   help! "Unknown command or template: #{command}" unless template
