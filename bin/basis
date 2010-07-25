@@ -20,11 +20,11 @@ require "optparse"
       rename, mv <old> <new>           Rename a template
       update [pattern]                 Update local templates
 
-      # add the 'gem:hoe' template
+      # add the 'gem-hoe' template
       $ basis add git://github.com/jbarnette/basis-gem-hoe.git
 
-      # start a new project `foo' using the `gem:hoe' template
-      $ basis gem:hoe foo
+      # start a new project `foo' using the `gem-hoe' template
+      $ basis gem-hoe foo
 
   Switches:
 END
