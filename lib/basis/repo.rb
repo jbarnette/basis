@@ -10,8 +10,7 @@ module Basis
     end
 
     def add url, name = nil
-      name ||= File.basename(url, ".git").
-        downcase.sub(/^basis[-_]/, "").tr "-", ":"
+      name ||= File.basename(url, ".git").downcase.sub(/^basis[-_]/, "")
 
       if templates.keys.include? name
         raise "Template '#{name}' already exists!"
