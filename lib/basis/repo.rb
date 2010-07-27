@@ -50,12 +50,12 @@ module Basis
         end
       end
 
-      Hash[@templates.select { |n, t| pattern.nil? || pattern =~ n }]
+      Hash[@templates.select { |n, t| pattern.nil? || /#{pattern}/ =~ n }]
     end
 
     def update pattern = nil
       templates.each do |name, template|
-        next unless pattern.nil? || pattern =~ name
+        next unless pattern.nil? || /#{pattern}/ =~ name
         Dir.chdir(template.srcdir) { git :pull }
       end
     end
