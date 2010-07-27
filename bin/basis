@@ -75,7 +75,20 @@ begin
     @repo.add url, name
 
   when "ls", "list" then
-    @repo.templates(ARGV.shift).each { |name, template| puts name }
+    templates = @repo.templates ARGV.shift
+    width     = templates.keys.map(&:length).max
+    max       = 80 - width - 5
+
+    templates.keys.sort.each do |name|
+      template = templates[name]
+      desc     = template.description
+
+      if desc.length > max
+        desc = desc[0, max - 3] + "..."
+      end
+
+      printf "%-#{width}s   # #{desc}\n", name
+    end
 
   when "mv", "rename" then
     help! "Need names!" unless (old, new = ARGV) && old && new
