@@ -7,6 +7,15 @@ module Basis
 
     def initialize srcdir
       @srcdir = File.expand_path srcdir
+
+      if File.exist?(template = "#@srcdir/.basis/template.rb")
+        src = IO.read template
+        extend eval("Module.new do;#{src};end", nil, template, 1)
+      end
+    end
+
+    def description
+      "An awesome template."
     end
 
     def render destdir, context
