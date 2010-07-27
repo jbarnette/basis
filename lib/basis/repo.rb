@@ -1,6 +1,6 @@
 require "basis/template"
 require "fileutils"
-require "open3"
+require "open4"
 
 module Basis
   class Repo
@@ -58,12 +58,14 @@ module Basis
     private
 
     def git *args
-      error = Open3.popen3 "git", *args.map(&:to_s) do |stdin, stdout, stderr|
-        err = stderr.read.chomp
-        err unless err.empty?
+      out, err = nil
+
+      status = Open4.popen4 "git", *args.map(&:to_s) do |pid, sin, sout, serr|
+        out = sout.read.chomp
+        err = serr.read.chomp
       end
 
-      raise error if error
+      raise err if 0 != status.exitstatus
     end
 
     def template_path *args

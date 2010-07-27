@@ -1,6 +1,6 @@
 require "hoe"
 
-Hoe.plugin :doofus, :git
+Hoe.plugin :doofus, :git, :isolate
 
 Hoe.spec "basis" do
   developer "John Barnette", "jbarnette@gmail.com"
@@ -12,5 +12,6 @@ Hoe.spec "basis" do
   self.readme_file      = "README.rdoc"
   self.testlib          = :minitest
 
-  extra_deps << ["erubis", ">= 2", "< 3"]
+  extra_deps << ["erubis", "~> 2.0"]
+  extra_deps << ["open4",  "~> 1.0"]
 end
