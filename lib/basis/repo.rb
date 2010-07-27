@@ -1,3 +1,4 @@
+require "basis"
 require "basis/template"
 require "fileutils"
 require "open4"
@@ -14,7 +15,7 @@ module Basis
       name ||= File.basename(url, ".git").downcase.sub(/^basis[-_]/, "")
 
       if templates.keys.include? name
-        raise "Template '#{name}' already exists!"
+        raise Basis::Oops, "Template '#{name}' already exists!"
       end
 
       FileUtils.mkdir_p template_path
@@ -30,6 +31,10 @@ module Basis
     end
 
     def rename old, new
+      unless File.directory? template_path(old)
+        raise Basis::Oops, "Unknown template: #{old}"
+      end
+
       FileUtils.mv template_path(old), template_path(new)
     end
 
@@ -65,7 +70,7 @@ module Basis
         err = serr.read.chomp
       end
 
-      raise err if 0 != status.exitstatus
+      raise Basis::Oops, err if 0 != status.exitstatus
     end
 
     def template_path *args

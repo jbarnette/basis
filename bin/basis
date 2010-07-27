@@ -36,7 +36,11 @@ def help
 end
 
 def help! message = nil
-  warn "fatal: #{message}" if message
+  if message
+    message = "fatal: #{message}" if /^fatal/ !~ message
+    warn message
+  end
+
   abort @options.help
 end
 
@@ -63,37 +67,39 @@ end
 
 @repo = Basis::Repo.new
 
-# FIX: rescue
+begin
+  case command = ARGV.shift
+  when "add" then
+    url, name = ARGV
+    help! "Need a url" unless url
+    @repo.add url, name
 
-case command = ARGV.shift
-when "add" then
-  url, name = ARGV
-  help! "Need a url" unless url
-  @repo.add url, name
+  when "ls", "list" then
+    @repo.templates(ARGV.shift).each { |name, template| puts name }
 
-when "ls", "list" then
-  @repo.templates(ARGV.shift).each { |name, template| puts name }
+  when "mv", "rename" then
+    help! "Need names!" unless (old, new = ARGV) && old && new
+    @repo.rename old, new
 
-when "mv", "rename" then
-  help! "Need names!" unless (old, new = ARGV) && old && new
-  @repo.rename old, new
+  when "rm", "remove" then
+    help! "Need a name" unless name = ARGV.shift
+    @repo.remove name
 
-when "rm", "remove" then
-  help! "Need a name" unless name = ARGV.shift
-  @repo.remove name
+  when "update" then
+    @repo.update ARGV.shift
 
-when "update" then
-  @repo.update ARGV.shift
+  else
+    help! unless command
+    template = @repo.templates[command]
 
-else
-  help! unless command
-  template = @repo.templates[command]
+    help! "Unknown command or template: #{command}" unless template
+    help! "Need a destination directory" unless destdir = ARGV.shift
 
-  help! "Unknown command or template: #{command}" unless template
-  help! "Need a destination directory" unless destdir = ARGV.shift
+    my  = Basis::My.new File.basename(destdir)
+    ctx = Basis::Context.new my, @overrides
 
-  my  = Basis::My.new File.basename(destdir)
-  ctx = Basis::Context.new my, @overrides
-
-  template.render destdir, ctx
+    template.render destdir, ctx
+  end
+rescue Basis::Oops => e
+  help! e.message
 end
