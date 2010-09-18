@@ -2,6 +2,7 @@
 
 require "basis"
 require "basis/context"
+require "basis/hooks"
 require "basis/my"
 require "basis/repo"
 require "optparse"
@@ -65,6 +66,11 @@ rescue OptionParser::ParseError => e
   help! e.message
 end
 
+
+if File.file?(hooks = File.expand_path("~/.basis/hooks.rb"))
+  Basis::Hooks.module_eval File.read(hooks), hooks, 1
+end
+
 @repo = Basis::Repo.new
 
 begin
@@ -76,7 +82,7 @@ begin
 
   when "ls", "list" then
     templates = @repo.templates ARGV.shift
-    width     = templates.keys.map(&:length).max
+    width     = templates.keys.map(&:length).max || 0
     max       = 80 - width - 5
 
     templates.keys.sort.each do |name|
@@ -91,7 +97,9 @@ begin
     end
 
   when "mv", "rename" then
-    help! "Need names!" unless (old, new = ARGV) && old && new
+    old, new = ARGV
+
+    help! "Need names!" unless old && new
     @repo.rename old, new
 
   when "rm", "remove" then
@@ -112,6 +120,7 @@ begin
     ctx = Basis::Context.new my, @overrides
 
     template.render destdir, ctx
+    Basis::Hooks.fire :rendered, destdir
   end
 rescue Basis::Oops => e
   help! e.message
