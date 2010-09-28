@@ -4,9 +4,16 @@ require "fileutils"
 module Basis
   class Template
     attr_reader :srcdir
+    attr_reader :origin
 
     def initialize srcdir
       @srcdir = File.expand_path srcdir
+
+      Dir.chdir @srcdir do
+        remote  = `git remote -v`.split(/\s/)[1]
+        rev     = `git rev-parse HEAD`
+        @origin = "#{remote}@#{rev}"
+      end
 
       if File.exist?(template = "#@srcdir/.basis/template.rb")
         src = IO.read template
@@ -19,6 +26,12 @@ module Basis
     end
 
     def render destdir, context
+      FileUtils.mkdir_p File.join(destdir, ".basis")
+
+      File.open File.join(destdir, ".basis", "origin"), "wb" do |f|
+        f.puts origin
+      end
+
       Dir.glob("#{srcdir}/**/*", File::FNM_DOTMATCH).each do |src|
         next unless File.file? src
 
