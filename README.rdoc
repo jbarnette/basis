@@ -6,7 +6,8 @@
 
 Basis is a project skeleton generator.
 
-It'll have more docs at some point.
+It'll have more docs at some point. 1.x releases of Basis are
+primarily experiments in anticipation of a 2.0.
 
 == Examples
 
