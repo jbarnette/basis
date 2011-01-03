@@ -1,3 +1,18 @@
+=== 1.1.0 / 2011-01-03
+
+* Add 1.x rationale.
+* Store original git URL and SHA in rendered projects.
+* Add ill-conceived stab at hooks.
+* Fix pattern matching on update and list.
+* 'Improve' error handling.
+* Don't require RubyGems.
+* Use open4.
+* Require Ruby >= 1.8.7.
+* Update examples in --help.
+* Add rename/mv.
+* Remove useless colonification.
+* Ignore coverage info.
+
 === 1.0.0 / 2010-07-21
 
 * Birthday!

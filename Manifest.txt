@@ -6,6 +6,7 @@ Rakefile
 bin/basis
 lib/basis.rb
 lib/basis/context.rb
+lib/basis/hooks.rb
 lib/basis/my.rb
 lib/basis/repo.rb
 lib/basis/template.rb
